@@ -1,0 +1,152 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    D&D VTT - QUICK REFERENCE GUIDE                           ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+🌐 APPLICATION URL:
+   http://localhost:3000
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📍 FIRST TIME SETUP:
+
+   1. cd /home/beast/Projects/DNDMap/dndapp
+   2. npm install
+   3. npm run dev
+   4. Open http://localhost:3000 in browser
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎮 GAMEPLAY FLOW:
+
+   STEP 1: DM Setup
+   ├─ Go to http://localhost:3000
+   ├─ Click "Launch as DM"
+   ├─ Wait for DMToolbar to appear
+   └─ Note the session ID (shown at bottom)
+
+   STEP 2: Players Join
+   ├─ Players go to same URL
+   ├─ Click "Launch as Player"
+   ├─ Same session ID is used automatically
+   └─ Player tokens appear on map
+
+   STEP 3: Start Game
+   ├─ DM clicks Brush tool (🖌️ or press "1")
+   ├─ DM paints on map to reveal fog
+   ├─ Players see updates in real-time
+   ├─ Players drag their tokens to move
+   └─ Game continues!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⌨️ KEYBOARD SHORTCUTS (DM Only):
+
+   [1]  - Enable Brush tool (paint fog away)
+   [2]  - Enable Rectangle tool (draw rectangles)
+   [0]  - Disable current tool
+   [R]  - Reset all fog (cover entire map again)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎛️ DM TOOLBAR CONTROLS:
+
+   FOG OF WAR Section (Purple):
+   ├─ 🖌️  Brush        - Click & drag to reveal fog (smooth brush)
+   ├─ 📦 Rectangle     - Drag to draw rectangular reveals
+   ├─ ❌ Disable       - Turn off fog tools
+   └─ 🔴 Reset Fog    - Restore complete fog coverage
+
+   ENEMIES Section (Orange):
+   ├─ Input field      - Type enemy name
+   └─ ➕ Spawn Enemy   - Create NPC token on map
+
+   TREASURES Section (Cyan):
+   ├─ Input field      - Type item name
+   └─ ➕ Spawn Loot    - Place item token on map
+
+   SHORTCUTS Section (Blue):
+   └─ Shows keyboard shortcuts
+
+   GUIDE Section (Indigo):
+   └─ Quick gameplay tips
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 PLAYER CONTROLS:
+
+   Mouse Drag     - Click & drag your token to move
+   (That's it!)   - Everything else syncs automatically
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🐛 TROUBLESHOOTING:
+
+   Server won't start:
+   $ lsof -ti:3000 | xargs kill -9
+   $ npm run dev
+
+   CSS/Tailwind not loading:
+   $ rm -rf .next
+   $ npm run dev
+
+   TypeScript errors:
+   $ npm run build
+
+   Socket.io not syncing:
+   Check browser DevTools → Network tab → WS connections
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 TECHNOLOGY STACK:
+
+   Frontend:    Next.js 14 + React 18 + TypeScript
+   Styling:     Tailwind CSS v4 (modern directives)
+   Graphics:    Konva.js 2D rendering
+   Fog System:  HTML5 Canvas with destination-out compositing
+   Real-time:   Socket.io 4.7.5
+   Backend:     Express.js + Node.js
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💾 PROJECT STRUCTURE:
+
+   /app                  - Next.js pages and layouts
+   /component            - React components (DMToolbar, etc)
+   /lib                  - Core logic and utilities
+   /public               - Static assets
+   /server.ts            - Express + Socket.io backend
+   /tailwind.config.ts   - Tailwind CSS configuration
+   /postcss.config.mjs   - PostCSS configuration
+   /app/globals.css      - Global styles
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ FEATURES IMPLEMENTED:
+
+   ✓ Material Design UI with Tailwind CSS
+   ✓ Real-time multiplayer with Socket.io
+   ✓ Canvas-based fog of war system
+   ✓ Brush and rectangle reveal tools
+   ✓ NPC/Item spawning
+   ✓ Token dragging for movement
+   ✓ DM/Player permission system
+   ✓ Session-based campaign management
+   ✓ Responsive design (mobile-friendly)
+   ✓ Professional gradients and animations
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 NPM COMMANDS:
+
+   npm run dev           - Start development server (hot reload)
+   npm run build         - Build optimized production version
+   npm run lint          - Check TypeScript and formatting
+   npm start             - Start production server
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ready to play? Go to http://localhost:3000 and start your campaign!
+
+Last Updated: January 24, 2026
+Status: ✅ Production Ready
+Version: 2.0.0
