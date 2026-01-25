@@ -8,6 +8,7 @@ export class GameEngine {
   private campaignId: string;
   private isDM: boolean;
   private playerId: string;
+  private username: string;
   private fogManager?: FogManager;
   private tokenManager?: TokenManager;
 
@@ -15,6 +16,7 @@ export class GameEngine {
     container: string | HTMLDivElement,
     campaignId: string,
     isDM: boolean,
+    username: string = "Player",
   ) {
     const containerId =
       typeof container === "string" ? container : "konva-container";
@@ -26,11 +28,26 @@ export class GameEngine {
     this.map = new KonvaMap(containerId);
     this.campaignId = campaignId;
     this.isDM = isDM;
-    this.playerId = `player-${Math.random().toString(36).substr(2, 9)}`;
+    this.username = username;
+
+    // Check if player ID already exists in localStorage for this campaign
+    // This ensures the same player maintains their identity across page refreshes
+    const storedPlayerId = localStorage.getItem(
+      `vtt_playerId_${campaignId}_${username}`,
+    );
+    if (storedPlayerId) {
+      this.playerId = storedPlayerId;
+    } else {
+      this.playerId = `player-${username}-${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem(
+        `vtt_playerId_${campaignId}_${username}`,
+        this.playerId,
+      );
+    }
   }
 
-  init() {
-    this.map.addBackground("/map.jpg");
+  init(mapUrl: string = "/map.jpg") {
+    this.map.addBackground(mapUrl);
 
     // Initialize fog and tokens managers
     this.fogManager = new FogManager(this.map, this.campaignId, this.isDM);
@@ -42,11 +59,13 @@ export class GameEngine {
       this.campaignId,
       this.isDM,
       this.playerId,
+      this.username,
     );
     this.tokenManager.setupSocketListeners();
 
     this.setupKeyboardShortcuts();
     this.join();
+    this.setupMapSyncListener();
 
     if (this.isDM) {
       this.setupDM();
@@ -55,6 +74,13 @@ export class GameEngine {
     }
 
     console.log(`✓ GameEngine initialized (${this.isDM ? "DM" : "Player"})`);
+  }
+
+  private setupMapSyncListener() {
+    const { socket } = require("@/lib/socket");
+    socket.on("map:change", ({ mapUrl }: { mapUrl: string }) => {
+      this.map.replaceBackground(mapUrl);
+    });
   }
 
   private setupKeyboardShortcuts() {
@@ -126,6 +152,16 @@ export class GameEngine {
     this.tokenManager?.deleteToken(tokenId);
   }
 
+  setBackground(mapUrl: string) {
+    this.map.replaceBackground(mapUrl);
+    // Emit map change to all clients
+    const { socket } = require("@/lib/socket");
+    socket.emit("map:change", {
+      campaignId: this.campaignId,
+      mapUrl,
+    });
+  }
+
   destroy() {
     this.map.destroy();
     const { socket } = require("@/lib/socket");
@@ -135,5 +171,6 @@ export class GameEngine {
     socket.off("token:delete");
     socket.off("player:joined");
     socket.off("player:left");
+    socket.off("map:change");
   }
 }

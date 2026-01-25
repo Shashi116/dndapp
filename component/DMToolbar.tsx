@@ -4,6 +4,12 @@
 import Toolbar from "@/component/toolbar/Toolbar";
 import { GameEngine } from "@/lib/gameEngine";
 
-export default function DMToolbar({ engine }: { engine: GameEngine | null }) {
-  return <Toolbar engine={engine} />;
+export default function DMToolbar({
+  engine,
+  onMapChange,
+}: {
+  engine: GameEngine | null;
+  onMapChange?: (url: string) => void;
+}) {
+  return <Toolbar engine={engine} onMapChange={onMapChange} />;
 }

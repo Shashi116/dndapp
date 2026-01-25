@@ -110,6 +110,13 @@ app.prepare().then(() => {
       socket.to(campaignId).emit("game:state", state);
     });
 
+    // ---- Map Changes ----
+    socket.on("map:change", ({ campaignId, mapUrl }) => {
+      console.log(`Map changed in campaign ${campaignId} to ${mapUrl}`);
+      // Broadcast to all players in the campaign
+      socket.to(campaignId).emit("map:change", { mapUrl });
+    });
+
     socket.on("disconnect", () => {
       // Clean up campaigns
       for (const [campaignId, campaign] of campaigns.entries()) {
