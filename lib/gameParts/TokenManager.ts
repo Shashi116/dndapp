@@ -6,6 +6,7 @@ export class TokenManager {
   campaignId: string;
   isDM: boolean;
   playerId: string;
+  username: string;
   tokens = new Map<string, Token>();
 
   constructor(
@@ -13,11 +14,13 @@ export class TokenManager {
     campaignId: string,
     isDM: boolean,
     playerId: string,
+    username: string = "Player",
   ) {
     this.map = map;
     this.campaignId = campaignId;
     this.isDM = isDM;
     this.playerId = playerId;
+    this.username = username;
   }
 
   handleTokenUpdate(data: Token | Token[]) {
@@ -45,11 +48,18 @@ export class TokenManager {
   }
 
   setupPlayerToken() {
+    // Check if player token already exists (prevents duplicates on refresh)
+    const playerTokenId = `token-${this.playerId}`;
+    if (this.tokens.has(playerTokenId)) {
+      console.log(`Player token already exists: ${playerTokenId}`);
+      return;
+    }
+
     const playerToken: Token = {
-      id: `token-${this.playerId}`,
+      id: playerTokenId,
       x: 200 + Math.random() * 200,
       y: 200 + Math.random() * 200,
-      label: "You",
+      label: this.username,
       color: "#4ecdc4",
       playerId: this.playerId,
     };

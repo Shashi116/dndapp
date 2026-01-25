@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import { GameEngine } from "@/lib/gameEngine";
 
-export function Toolbar({ engine }: { engine: GameEngine | null }) {
+export function Toolbar({
+  engine,
+  onMapChange,
+}: {
+  engine: GameEngine | null;
+  onMapChange?: (url: string) => void;
+}) {
   const [selected, setSelected] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [type, setType] = useState<"NPC" | "ITEM">("NPC");
@@ -11,6 +17,13 @@ export function Toolbar({ engine }: { engine: GameEngine | null }) {
   const [x, setX] = useState<number>(300);
   const [y, setY] = useState<number>(300);
   const [icon, setIcon] = useState<string | null>(null);
+  const [selectedMap, setSelectedMap] = useState<string>("/map.jpg");
+  const presetMaps = [
+    { url: "/map.jpg", label: "Map" },
+    { url: "/map1.jpg", label: "Map 1" },
+    { url: "/map2.jpg", label: "Map 2" },
+    { url: "/map3.jpg", label: "Map 3" },
+  ];
   const presetIcons = [
     "/icons/sword.svg",
     "/icons/potion.svg",
@@ -67,6 +80,46 @@ export function Toolbar({ engine }: { engine: GameEngine | null }) {
         <h2 className="text-xl font-bold text-amber-400">DM Console</h2>
         <p className="text-xs text-slate-400">Controls and tools</p>
       </div>
+
+      <section className="mb-6">
+        <h3 className="text-sm font-semibold text-cyan-300 mb-2">🗺️ Map</h3>
+        <div className="space-y-2 text-sm">
+          <select
+            value={selectedMap}
+            onChange={(e) => {
+              const url = e.target.value;
+              setSelectedMap(url);
+              onMapChange?.(url);
+              engine.setBackground(url);
+            }}
+            className="w-full bg-slate-800 px-2 py-1 rounded"
+          >
+            {presetMaps.map((m) => (
+              <option key={m.url} value={m.url}>
+                {m.label}
+              </option>
+            ))}
+          </select>
+          <input
+            type="file"
+            accept="image/jpeg,image/jpg"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (!f) return;
+              const reader = new FileReader();
+              reader.onload = () => {
+                const dataUrl = reader.result as string;
+                setSelectedMap(dataUrl);
+                onMapChange?.(dataUrl);
+                engine.setBackground(dataUrl);
+              };
+              reader.readAsDataURL(f);
+            }}
+            className="w-full bg-slate-800 px-2 py-1 rounded text-xs"
+            placeholder="Upload JPG map"
+          />
+        </div>
+      </section>
 
       <section className="mb-6">
         <h3 className="text-sm font-semibold text-purple-300 mb-2">Fog</h3>

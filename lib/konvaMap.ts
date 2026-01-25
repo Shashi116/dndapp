@@ -79,6 +79,13 @@ export class KonvaMap {
     image.src = imageSrc;
   }
 
+  replaceBackground(imageSrc: string) {
+    // Clear existing background
+    this.backgroundLayer.destroyChildren();
+    // Add new background
+    this.addBackground(imageSrc);
+  }
+
   addToken(token: Token, onDrag?: (updated: Token) => void, isDM?: boolean) {
     const group = new Konva.Group({
       x: token.x,
