@@ -75,16 +75,9 @@ export class GameEngine {
 
   resetFog() {
     if (!this.fogManager) return;
-    this.fogManager.setupFogTools();
-    // broadcast/reset handled within FogManager
-    if (this.fogManager) {
-      // reuse FogManager's reset via socket listener trigger
-      // directly invoke reset by emitting a fog:reset from this engine
-      // so all connected clients receive the update
-      // FogManager itself listens for the event and will redraw.
-      // Emit here:
-      // (socket is intentionally not imported here to keep GameEngine minimal)
-    }
+    this.fogManager.resetFogLocally();
+    const { socket } = require("@/lib/socket");
+    socket.emit("fog:reset", { campaignId: this.campaignId });
   }
 
   private join() {

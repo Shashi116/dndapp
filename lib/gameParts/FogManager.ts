@@ -52,20 +52,26 @@ export class FogManager {
         listening: false,
       });
       this.fogLayer!.add(this.fogImage);
-      try {
-        this.map.tokenLayer.moveToTop();
-      } catch (e) {}
+      // Always keep token layer on top after fog image loads
+      this.map.tokenLayer.moveToTop();
       this.map.stage.draw();
     };
     konvaImage.src = this.fogCanvas.toDataURL();
+    // Also move token layer to top immediately (sync) so it's above fog layer
+    this.map.tokenLayer.moveToTop();
   }
 
   setFogTool(tool: "BRUSH" | "RECT" | "NONE") {
     this.fogTool = tool;
   }
 
+  private fogToolsInitialized = false;
+
   setupFogTools() {
     if (!this.isDM) return;
+    // Guard: only register stage listeners once
+    if (this.fogToolsInitialized) return;
+    this.fogToolsInitialized = true;
 
     this.map.stage.on("pointerdown", (e: any) => {
       if (this.fogTool === "NONE") return;
@@ -183,6 +189,18 @@ export class FogManager {
       width,
       height,
     });
+  }
+
+  resetFogLocally() {
+    if (!this.fogCanvas || !this.fogContext || !this.fogImage) return;
+    this.fogContext.clearRect(0, 0, this.stageWidth, this.stageHeight);
+    this.fogContext.globalAlpha = 0.7;
+    this.fogContext.fillStyle = "#000";
+    this.fogContext.fillRect(0, 0, this.stageWidth, this.stageHeight);
+    this.fogContext.globalAlpha = 1;
+    const konvaImage = new Image();
+    konvaImage.onload = () => { this.fogImage!.image(konvaImage); this.map.stage.draw(); };
+    konvaImage.src = this.fogCanvas.toDataURL();
   }
 
   setupSocketListeners() {

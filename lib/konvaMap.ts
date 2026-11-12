@@ -223,15 +223,10 @@ export class KonvaMap {
 
   getFogLayer() {
     if (!this.fogLayer) {
-      this.fogLayer = new Konva.Layer();
-      // Add fog layer and ensure token layer remains on top so tokens
-      // are interactive even when fog is present.
+      this.fogLayer = new Konva.Layer({ listening: false });
       this.stage.add(this.fogLayer);
-      try {
-        this.tokenLayer.moveToTop();
-      } catch (e) {
-        /* ignore if tokenLayer not yet initialized */
-      }
+      // Token layer must always be above fog layer
+      this.tokenLayer.moveToTop();
     }
     return this.fogLayer;
   }

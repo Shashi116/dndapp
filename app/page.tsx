@@ -1,127 +1,162 @@
 "use client";
 
 import { useState } from "react";
-// import Link from "next/link";
+import {
+  Crown,
+  Shield,
+  Sword,
+  Map,
+  Scroll,
+  Flame,
+  ChevronRight,
+  X,
+} from "lucide-react";
+import styles from "./page.module.css";
+
+const quickStart = [
+  "DM launches first to create the session",
+  "Copy the session ID and share with players",
+  "Players join using the campaign code",
+  "DM controls fog of war, NPCs & items",
+  "Players drag tokens to move in real-time",
+  "Roll dice — all players see the result",
+];
 
 export default function Home() {
-  // const [campaignId, setCampaignId] = useState("");
   const [showJoinPopup, setShowJoinPopup] = useState(false);
   const [joinCode, setJoinCode] = useState("");
 
-  const pageStyle = {
-    backgroundImage: `url(/GenBG.png)`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    minHeight: '100vh',
-    width: '100%',
-  };
+  const generateCampaignId = () =>
+    `campaign-${Math.random().toString(36).substr(2, 9)}`;
 
-  const generateCampaignId = () => {
-    return `campaign-${Math.random().toString(36).substr(2, 9)}`;
+  const handleQuickStart = (isDM: boolean) => {
+    const id = generateCampaignId();
+    window.location.href = `/campaign/${id}${isDM ? "?dm=true" : ""}`;
   };
 
   const handleJoinCampaign = () => {
-    if (joinCode.trim()) {
-      window.location.href = `/campaign/${joinCode.trim()}`;
-    }
-  };
-  const handleQuickStart = (isDM: boolean) => {
-    const id = generateCampaignId();
-    const url = `/campaign/${id}${isDM ? "?dm=true" : ""}`;
-    window.location.href = url;
+    if (joinCode.trim()) window.location.href = `/campaign/${joinCode.trim()}`;
   };
 
   return (
-    <div style={pageStyle}>
-      <div className="w-screen h-screen bg-linear-to-br from-slate-950 via-slate-900 to-black flex items-center justify-center p-4">
-        <div className="max-w-2xl w-full">
-          <div className="text-center bg-gray-200 bg-transparent-4 mb-12">
-            <h1 className="text-5xl font-black text-blach bg-clip-text bg-linear-to-r from-amber-400 to-amber-600 mb-4">
-              🐉 D&D Virtual TableTop
-            </h1>
-            <p className="text-lg text-slate-300">
-              Real-time multiplayer campaign management
-            </p>
+    <div className={styles.page}>
+      <div className={styles.vignette} />
+
+      <div className={styles.layout}>
+        <div className={styles.container}>
+
+          {/* Header */}
+          <header className={styles.header}>
+            <div className={styles.headerIcon}>
+              <Flame size={42} strokeWidth={1.5} />
+            </div>
+            <h1 className={styles.title}>D&amp;D Virtual TableTop</h1>
+            <p className={styles.subtitle}>Real-Time Multiplayer Campaign Management</p>
+          </header>
+
+          {/* Ornamental divider */}
+          <div className={styles.divider}>
+            <Sword size={16} strokeWidth={1.5} />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {/* DM Mode */}
-            <div className="bg-linear-to-br from-slate-800 to-slate-700 p-8 rounded-2xl border-2 border-purple-600/50 shadow-xl hover:border-purple-400 transition">
-              <h2 className="text-2xl font-bold text-purple-300 mb-4">
-                👑 Dungeon Master
-              </h2>
-              <p className="text-slate-300 mb-6">
-                Control the entire battlefield. Manage fog of war, spawn enemies,
-                place treasures, and guide your players through epic adventures.
+          {/* Cards */}
+          <div className={styles.cards}>
+
+            {/* DM Card */}
+            <div className={`${styles.card} ${styles.cardDM}`}>
+              <div className={styles.cardIcon}>
+                <span className={styles.cardIconDM}><Crown size={28} strokeWidth={1.5} /></span>
+                <h2 className={styles.cardHeadingDM}>Dungeon Master</h2>
+              </div>
+              <p className={styles.cardText}>
+                Command the entire battlefield. Reveal the fog of war, spawn
+                enemies, place treasures, and guide your players through
+                legendary adventures.
               </p>
               <button
+                className={`${styles.btn} ${styles.btnDM}`}
                 onClick={() => handleQuickStart(true)}
-                className="w-full px-6 py-3 bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-bold rounded-lg border-2 border-purple-500 shadow-lg hover:shadow-purple-600/50 transition-all"
               >
+                <Flame size={16} strokeWidth={2} />
                 Launch as DM
               </button>
             </div>
 
-            {/* Player Mode */}
-            <div className="bg-linear-to-br from-slate-800 to-slate-700 p-8 rounded-2xl border-2 border-cyan-600/50 shadow-xl hover:border-cyan-400 transition">
-              <h2 className="text-2xl font-bold text-cyan-300 mb-4">👤 Player</h2>
-              <p className="text-slate-300 mb-6">
-                Join a campaign and guide your character through the adventure.
-                Move your token, manage your inventory, and work with your party.
+            {/* Player Card */}
+            <div className={`${styles.card} ${styles.cardPlayer}`}>
+              <div className={styles.cardIcon}>
+                <span className={styles.cardIconPlayer}><Shield size={28} strokeWidth={1.5} /></span>
+                <h2 className={styles.cardHeadingPlayer}>Player</h2>
+              </div>
+              <p className={styles.cardText}>
+                Join a campaign and forge your legend. Move your token, manage
+                your inventory, roll dice, and fight alongside your party.
               </p>
               <button
+                className={`${styles.btn} ${styles.btnPlayer}`}
                 onClick={() => setShowJoinPopup(true)}
-                className="w-full px-6 py-3 bg-linear-to-r from-cyan-600 to-cyan-700 hover:from-cyan-500 hover:to-cyan-600 text-white font-bold rounded-lg border-2 border-cyan-500 shadow-lg hover:shadow-cyan-600/50 transition-all"
               >
+                <Map size={16} strokeWidth={2} />
                 Launch as Player
               </button>
             </div>
           </div>
 
-          {/* Instructions */}
-          <div className="bg-slate-800/50 border border-slate-700 rounded-lg p-6 text-slate-300 text-sm">
-            <h3 className="text-amber-400 font-bold mb-2">Quick Start:</h3>
-            <ul className="space-y-2">
-              <li>✓ DM launches first to create the session</li>
-              <li>✓ Copy the session ID and share with players</li>
-              <li>✓ Players join with the same ID</li>
-              <li>✓ DM controls fog, NPCs, and items</li>
-              <li>✓ Players move their characters</li>
-            </ul>
-          </div>
-        </div>
-
-        {showJoinPopup && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-            <div className="max-w-sm w-full bg-slate-800 border border-cyan-600 rounded-2xl p-8 shadow-2xl">
-              <h2 className="text-xl font-bold text-cyan-300 mb-4">Enter Campaign Code</h2>
-              <input
-                className="w-full px-4 py-2 rounded-lg bg-slate-700 text-white border border-slate-500 focus:border-cyan-400 outline-none mb-4"
-                placeholder="e.g. campaign-abc123"
-                value={joinCode}
-                onChange={(e) => setJoinCode(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleJoinCampaign()}
-                autoFocus
-              />
-              <div className="flex gap-3">
-                <button
-                  onClick={handleJoinCampaign}
-                  className="flex-1 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg transition"
-                >
-                  Join
-                </button>
-                <button
-                  onClick={() => setShowJoinPopup(false)}
-                  className="flex-1 py-2 bg-slate-600 hover:bg-slate-500 text-white rounded-lg transition"
-                >
-                  Cancel
-                </button>
-              </div>
+          {/* Parchment Quick Start */}
+          <div className={styles.parchment}>
+            <div className={styles.parchmentHeader}>
+              <Scroll size={18} strokeWidth={1.5} color="#5c3a0a" />
+              <span className={styles.parchmentTitle}>Quick Start</span>
+            </div>
+            <div className={styles.parchmentGrid}>
+              {quickStart.map((item, i) => (
+                <div key={i} className={styles.parchmentItem}>
+                  <ChevronRight size={14} strokeWidth={2.5} className={styles.parchmentBullet} />
+                  <span>{item}</span>
+                </div>
+              ))}
             </div>
           </div>
-        )}
+
+        </div>
       </div>
+
+      {/* Join Popup */}
+      {showJoinPopup && (
+        <div className={styles.overlay}>
+          <div className={styles.popup}>
+            <h2 className={styles.popupTitle}>
+              <Map size={20} strokeWidth={1.5} />
+              Enter Campaign Code
+            </h2>
+            <input
+              className={styles.popupInput}
+              placeholder="e.g. campaign-abc123"
+              value={joinCode}
+              onChange={(e) => setJoinCode(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleJoinCampaign()}
+              autoFocus
+            />
+            <div className={styles.popupActions}>
+              <button
+                className={`${styles.btn} ${styles.btnPlayer}`}
+                style={{ flex: 1 }}
+                onClick={handleJoinCampaign}
+              >
+                <Shield size={15} strokeWidth={2} />
+                Join Campaign
+              </button>
+              <button
+                className={styles.btnCancel}
+                onClick={() => setShowJoinPopup(false)}
+              >
+                <X size={14} strokeWidth={2} />
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

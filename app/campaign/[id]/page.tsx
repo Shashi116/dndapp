@@ -12,43 +12,38 @@ export default function CampaignPage({ params, searchParams }: any) {
   const [engine, setEngine] = useState<GameEngine | null>(null);
 
   useEffect(() => {
-    const dmParam = searchParams?.dm === "true";
-    setIsDM(dmParam);
+    setIsDM(searchParams?.dm === "true");
     setMounted(true);
   }, [searchParams]);
 
   useEffect(() => {
     if (!mounted || !ref.current) return;
-
     const newEngine = new GameEngine(ref.current, params.id, isDM);
     engineRef.current = newEngine;
     setEngine(newEngine);
-
     newEngine.init();
-
-    return () => {
-      newEngine.destroy();
-      engineRef.current = null;
-      setEngine(null);
-    };
+    return () => { newEngine.destroy(); engineRef.current = null; setEngine(null); };
   }, [params.id, isDM, mounted]);
 
   return (
-    <div className="w-screen min-h-screen bg-black flex">
+    <div style={{ width: "100vw", minHeight: "100vh", background: "#000", display: "flex" }}>
       {isDM && <DMToolbar engine={engine} />}
 
-      <main className="flex-1 ml-0" style={{ marginLeft: isDM ? 288 : 0 }}>
-        <div
-          ref={ref}
-          className="w-full h-screen transition-all duration-300"
-          style={{ minHeight: "100vh" }}
-        />
+      <main style={{ flex: 1, marginLeft: isDM ? 288 : 0 }}>
+        <div ref={ref} style={{ width: "100%", height: "100vh" }} />
 
-        <div
-          className="fixed bottom-3 right-3 px-3 py-2 bg-black bg-opacity-80 text-xs font-mono rounded z-50"
-          style={{ color: isDM ? "#ffff00" : "#00ff00" }}
-        >
-          {isDM ? "🎮 DM Mode" : "👤 Player Mode"} | {params.id}
+        <div style={{
+          position: "fixed", bottom: 12, right: 12,
+          padding: "6px 12px",
+          background: "rgba(0,0,0,0.82)",
+          color: isDM ? "#facc15" : "#4ade80",
+          fontSize: "0.75rem",
+          fontFamily: "monospace",
+          borderRadius: 4,
+          zIndex: 50,
+          border: `1px solid ${isDM ? "#854d0e" : "#166534"}`,
+        }}>
+          {isDM ? "⚔ DM Mode" : "🛡 Player Mode"} | {params.id}
         </div>
       </main>
     </div>
